@@ -1,0 +1,13 @@
+# Ignore Chrome data directory
+chrome-data/
+
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+
+# Ignore virtual environment
+venv/
+
+# Ignore system files
+.DS_Store
+Thumbs.db

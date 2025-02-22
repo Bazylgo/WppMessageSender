@@ -17,43 +17,43 @@ This Python script uses Selenium WebDriver to send automated WhatsApp messages t
 1. **Python 3.x** (ensure you have Python installed on your system).
 2. **Selenium**: The Python package used for browser automation.
 3. **Pandas**: A Python library used to handle CSV file reading.
-4. **Chrome WebDriver** (`chromedriver.exe`): The WebDriver for interacting with Google Chrome. It must match your installed version of Google Chrome.
-5. **Check Chrome Version**: On your browser, navigate to chrome://settings/help
-6. **Install Chrome WebDriver**: Ensure that the binary type is "chromedriver" https://googlechromelabs.github.io/chrome-for-testing/
+4. **Flask**: A Python library to run the frontend application.
+5. **Chrome WebDriver** (`chromedriver.exe`): The WebDriver for interacting with Google Chrome. It must match your installed version of Google Chrome.
+6. **Check Chrome Version**: On your browser, navigate to chrome://settings/help
+7. **Install Chrome WebDriver**: Ensure that the binary type is "chromedriver" https://googlechromelabs.github.io/chrome-for-testing/
 ### Steps to Set Up
 
 1. **Install Python dependencies:**
    First, ensure you have the necessary Python libraries installed. You can use `pip` to install them:
    ```bash
-   pip install selenium pandas
+   pip install selenium pandas flask
    ```
 
 2. **Download ChromeDriver:**
    - Download the **ChromeDriver** that matches your version of Google Chrome from: [ChromeDriver Download](https://googlechromelabs.github.io/chrome-for-testing/).
    - Extract the downloaded folder, and place `chromedriver.exe` in the `chromedriver-win64/` folder in your project.
 
-3. **Set Up Project Structure:**
-   Your project directory should be structured as follows:
+   3. **Set Up Project Structure:**
+      Your project directory should be structured as follows:
 
-   ```
-   WppMessageSender/
-   ├── src/                      # Your Python script folder
-   │   └── message_sender.py     # The Python script that sends messages
-   ├── chromedriver-win64/        # Folder containing chromedriver.exe
-   │   └── chromedriver.exe      # Chromedriver executable
-   ├── resources/                # Folder for CSV file
-   │   └── contacts.csv          # CSV file with phone numbers and names
-   │   └── message.txt           # Text file with the automated message
-   ├── requirements.txt          # List of Python dependencies
-   └── README.md                 # Documentation
-   ```
+      ```
+      WppMessageSender/
+      ├── src/                      # Your Python script folder
+      │   └── templates/            # Folder containing the frontend page
+      │       └── index.html        # The frontend to upload a CSV and write the message
+      │   └── send_message.py       # The Python script that sends messages
+      ├── chromedriver-win64/       # Folder containing chromedriver.exe
+      │   └── chromedriver.exe      # Chromedriver executable
+      ├── requirements.txt          # List of Python dependencies
+      └── README.md                 # Documentation
+      ```
 
-   Ensure that:
-   - `chromedriver.exe` is inside the `chromedriver-win64/` folder.
-   - Your contacts CSV file (`contacts.csv`) is inside the `resources/` folder. It should contain at least two columns: **Phone** and **Name**.
+      Ensure that:
+      - `chromedriver.exe` is inside the `chromedriver-win64/` folder.
+      - Your CSV file with contacts should contain at least two columns: **Phone** and **Name**.
 
 4. **Prepare Your Contacts CSV:**
-   Create a `contacts.csv` file inside the `resources/` folder with the following structure:
+   Create a `.csv` file with the following structure:
 
    | Phone       | Name    |
    |-------------|---------|
@@ -76,10 +76,10 @@ This Python script uses Selenium WebDriver to send automated WhatsApp messages t
    ```
 
 2. **Read the Contacts:**
-   The script loads the contacts from the `contacts.csv` file using **pandas**. The file is read into a DataFrame, and the script retrieves the phone numbers and names into separate lists.
+   The script loads the contacts from the `.csv` file using **pandas**. The file is read into a DataFrame, and the script retrieves the phone numbers and names into separate lists.
 
    ```python
-   df = pd.read_csv("resources/contacts.csv")
+   df = pd.read_csv(csv_file)
    phone_numbers = df['Phone'].tolist()
    names = df['Name'].tolist()
    ```
@@ -110,18 +110,20 @@ This Python script uses Selenium WebDriver to send automated WhatsApp messages t
 
 ## Running the Script
 
-1. **Launch WhatsApp Web:**
-   - Before running the script, make sure WhatsApp Web is active, and your account is logged in. The script will use the `chrome-data` directory to retain the session.
-   
-2. **Run the Script:**
-   Run the script from your terminal or PyCharm:
-
-   ```bash
-   python src/message_sender.py
-   ```
-
-   This will automatically start Chrome, navigate to WhatsApp Web, and begin sending messages to the contacts listed in the CSV file.
-
+1. **Execute the script:**
+   - Proceed to the repository and run on the terminal: 
+      ```bash
+      python send_message.py
+      ```
+2. **Open a browser different from Google Chrome:**
+   - Open http://127.0.0.1:5000
+2. **Launch WhatsApp Web on Google Chrome:**
+   - Open WhatsApp Web in Google Chrome and make sure that your account is logged in. The script will use the `chrome-data` directory to retain the session.
+3. **Upload the csv file:**
+   - Ensure that the csv file contains at least two columns: Phone and Name
+4. **Write the message:**
+   - In the text box, write your message. It will automatically take the name of the contact and add it at the beggining of the message. 
+   - E.g.: Hello Contact 1! "And here goes the message you wrote."
 ## Error Handling and Troubleshooting
 
 - **Unable to find input box**: If the XPath for the message input box changes (due to WhatsApp Web updates), you may need to update the XPath used to locate the input box.
