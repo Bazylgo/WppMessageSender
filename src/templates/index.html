@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Message Sender</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            color: #007bff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function showMessageForm() {
+            document.getElementById("qr-section").style.display = "none";
+            document.getElementById("message-section").style.display = "block";
+        }
+
+        function sendMessages() {
+            var formData = new FormData();
+
+            var csvFile = document.getElementById("csv-file").files[0];
+            var messageText = document.getElementById("message-text").value.trim();
+
+            if (!csvFile || messageText === "") {
+                alert("Please upload a CSV file and enter a message.");
+                return;
+            }
+
+            formData.append("csv", csvFile);
+            formData.append("message", messageText);
+
+            fetch("/send-messages", {
+                method: "POST",
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                alert("Error: " + error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>WhatsApp Message Sender</h1>
+
+        <!-- Step 1: Scan QR Code -->
+        <div id="qr-section">
+            <p>Open <a href="https://web.whatsapp.com" target="_blank">WhatsApp Web</a> on GOOGLE CHROME and scan the QR code.</p>
+            <button onclick="showMessageForm()">Click HERE After Scanning!</button>
+        </div>
+
+        <!-- Step 2: Enter Message & Upload CSV -->
+        <div id="message-section" style="display: none;">
+			<form id="message-form">
+				<label for="csv-file">Upload CSV file (Phone & Name columns are required):</label><br>
+				<input type="file" id="csv-file" required><br><br>
+
+				<label for="message-text">Enter Your Message:</label><br>
+				<textarea id="message-text" placeholder="Type your message here..." required></textarea>
+
+				<button type="button" onclick="sendMessages()">Send Messages</button>
+			</form>
+		</div>
+    </div>
+</body>
+</html>
